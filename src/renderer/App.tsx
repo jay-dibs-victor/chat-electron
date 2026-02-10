@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { store } from './store';
 
+import { ConnectionIndicator } from './components/ConnectionIndicator';
 import { Box, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-import { useAppDispatch } from './store/hooks';
+
 
 
 const theme = createTheme({
@@ -62,7 +63,13 @@ const MainLayout = () => {
 
     return (
         <Box sx={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden' }}>
-            In God we trust.
+            <Box sx={{ width: 350, borderRight: 1, borderColor: 'divider', display: 'flex', flexDirection: 'column' }}>
+                <ConnectionIndicator />
+                place holder
+            </Box>
+            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', minWidth: 0 }}>
+                place holder
+            </Box>
         </Box>
     );
 };

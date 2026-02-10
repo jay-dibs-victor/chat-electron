@@ -40,12 +40,33 @@ export async function encrypt(text: string): Promise<string> {
 }
 
 export async function decrypt(cipher: string): Promise<string> {
-    return ""
+    try {
+        if (!cipher || cipher.length < 16) return cipher; // Not encrypted or too short
+
+        const combined = new Uint8Array(
+            atob(cipher).split('').map(c => c.charCodeAt(0))
+        );
+
+        const iv = combined.slice(0, IV_LENGTH);
+        const ciphertext = combined.slice(IV_LENGTH);
+        const key = await getKey();
+
+        const decrypted = await crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv },
+            key,
+            ciphertext
+        );
+
+        return new TextDecoder().decode(decrypted);
+    } catch (err) {
+        // If decryption fails, it might be plaintext or wrong key
+        return cipher;
+    }
 }
 
 export function safeLog(message: string, content?: any) {
     if (content && typeof content === 'string') {
-        console.log(` ${message} (Content length: ${content.length})`);
+        console.log(`${message} (Content length: ${content.length})`);
     } else if (content) {
         console.log(` ${message}`, { ...content, body: '[REDACTED]' });
     } else {
