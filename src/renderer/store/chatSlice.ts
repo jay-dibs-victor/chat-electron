@@ -125,7 +125,34 @@ const chatSlice = createSlice({
     name: 'chats',
     initialState,
     reducers: {
+        selectChat: (state, action: PayloadAction<string>) => {
+            state.selectedChatId = action.payload;
+            state.messages = [];
+            state.hasMoreMessages = true;
+            const chat = state.chats.find(c => c.id === action.payload);
+            if (chat) chat.unreadCount = 0;
+        },
+        addMessage: (state, action: PayloadAction<Message>) => {
+            const msg = action.payload;
+            if (state.selectedChatId === msg.chatId) {
+                state.messages = [msg, ...state.messages];
+            }
 
+            const chatIndex = state.chats.findIndex(c => c.id === msg.chatId);
+            if (chatIndex !== -1) {
+                const chat = state.chats[chatIndex];
+                chat.lastMessageAt = msg.ts;
+                if (state.selectedChatId !== msg.chatId) {
+                    chat.unreadCount += 1;
+                }
+                // Move chat to top
+                state.chats.splice(chatIndex, 1);
+                state.chats.unshift(chat);
+            }
+        },
+        setSearchQuery: (state, action: PayloadAction<string>) => {
+            state.searchQuery = action.payload;
+        },
         clearSearchResults: (state) => {
             state.searchResults = [];
             state.searchQuery = '';
@@ -142,10 +169,35 @@ const chatSlice = createSlice({
             .addCase(fetchChats.pending, (state) => {
                 state.loading = true;
             })
+            .addCase(fetchChats.fulfilled, (state, action: PayloadAction<Chat[]>) => {
+                state.chats = action.payload;
+                state.loading = false;
+            })
+            .addCase(fetchChats.rejected, (state, action) => {
+                state.loading = false;
+            })
+            .addCase(fetchMessages.fulfilled, (state, action: PayloadAction<Message[]>) => {
+                if (action.payload.length < 50) state.hasMoreMessages = false;
+                state.messages = [...state.messages, ...action.payload];
+            })
+            .addCase(searchMessages.fulfilled, (state, action: PayloadAction<Message[]>) => {
+                state.searchResults = action.payload;
+            })
+            .addCase(sendMessage.fulfilled, (state, action: PayloadAction<Message>) => {
+                // Add the sent message to the beginning of the messages array
+                state.messages = [action.payload, ...state.messages];
 
+                // Update the chat's lastMessageAt
+                const chatIndex = state.chats.findIndex(c => c.id === action.payload.chatId);
+                if (chatIndex !== -1) {
+                    state.chats[chatIndex].lastMessageAt = action.payload.ts;
+                    // Move chat to top
+                    const chat = state.chats.splice(chatIndex, 1)[0];
+                    state.chats.unshift(chat);
+                }
+            });
     },
 });
 
-export const {
-    clearSearchResults, addToQueue, removeFromQueue } = chatSlice.actions;
+export const { selectChat, addMessage, setSearchQuery, clearSearchResults, addToQueue, removeFromQueue } = chatSlice.actions;
 export default chatSlice.reducer;

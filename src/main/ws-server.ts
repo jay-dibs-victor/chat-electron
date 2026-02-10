@@ -21,12 +21,14 @@ export function startWsServer(onNewMessage: (msg: any) => void) {
 
     wss.on('connection', (ws: any) => {
         console.log('WS: Client connected');
+
         ws.on('message', (message: any) => {
             const data = JSON.parse(message.toString());
             if (data.type === 'ping') {
                 ws.send(JSON.stringify({ type: 'pong' }));
             }
         });
+
         ws.on('close', () => {
             console.log('WS: Client disconnected');
         });
@@ -43,8 +45,10 @@ export function startWsServer(onNewMessage: (msg: any) => void) {
             sender: 'External User',
             body: encryptSync(rawBody),
         };
+
         saveMessage(chatId, message);
         onNewMessage(message);
+
         // Broadcast to all connected clients
         wss.clients.forEach((client: any) => {
             if (client.readyState === WebSocket.OPEN) {
@@ -52,5 +56,6 @@ export function startWsServer(onNewMessage: (msg: any) => void) {
             }
         });
     }, 2000);
+
     return wss;
 }
