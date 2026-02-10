@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "dist/main",
+        "types": [
+            "node",
+            "electron"
+        ]
+    },
+    "include": [
+        "src/main/**/*",
+        "src/preload/**/*",
+        "electron-vite.config.ts"
+    ]
+}
