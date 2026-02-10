@@ -127,7 +127,7 @@ export const MessageView = () => {
                         </Box>
                     )}
                     {(searchResults.length > 0 ? searchResults : [...messages].reverse()).map((msg) => (
-                        <ListItem key={msg.id} >
+                        <ListItem key={msg.id} sx={{ justifyContent: msg.sender === 'Me' ? 'flex-end' : 'flex-start', mb: 1, px: 0 }}>
                             <Paper sx={{
                                 p: 1.5,
                                 maxWidth: '75%',
