@@ -1,15 +1,19 @@
+import React, { useEffect } from 'react';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 import { Box, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { useAppDispatch } from './store/hooks';
 
 
 const theme = createTheme({
     palette: {
         mode: 'dark',
         primary: {
-            main: '#90caf9',
+            main: '#90caf9', // Light Blue
         },
         secondary: {
-            main: '#ce93d8',
+            main: '#ce93d8', // Purple
         },
         background: {
             default: '#121212',
@@ -21,7 +25,36 @@ const theme = createTheme({
         },
         divider: 'rgba(255, 255, 255, 0.12)',
     },
-
+    components: {
+        MuiCssBaseline: {
+            styleOverrides: {
+                body: {
+                    scrollbarColor: "#6b6b6b #2b2b2b",
+                    "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
+                        backgroundColor: "#2b2b2b",
+                    },
+                    "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
+                        borderRadius: 8,
+                        backgroundColor: "#6b6b6b",
+                        minHeight: 24,
+                        border: "3px solid #2b2b2b",
+                    },
+                    "&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus": {
+                        backgroundColor: "#959595",
+                    },
+                    "&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active": {
+                        backgroundColor: "#959595",
+                    },
+                    "&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover": {
+                        backgroundColor: "#959595",
+                    },
+                    "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
+                        backgroundColor: "#2b2b2b",
+                    },
+                },
+            },
+        },
+    },
 });
 
 const MainLayout = () => {
@@ -36,12 +69,12 @@ const MainLayout = () => {
 
 function App() {
     return (
-
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <MainLayout />
-        </ThemeProvider>
-
+        <Provider store={store}>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <MainLayout />
+            </ThemeProvider>
+        </Provider>
     );
 }
 

@@ -1,0 +1,54 @@
+
+
+const ENCRYPTION_KEY_STR = 'secure-messenger-demo-key-2026'; // Demo key
+const IV_LENGTH = 12;
+
+async function getKey(): Promise<CryptoKey> {
+    const enc = new TextEncoder();
+    const keyData = enc.encode(ENCRYPTION_KEY_STR);
+    const hash = await crypto.subtle.digest('SHA-256', keyData);
+    return await crypto.subtle.importKey(
+        'raw',
+        hash,
+        { name: 'AES-GCM' },
+        false,
+        ['encrypt', 'decrypt']
+    );
+}
+
+export async function encrypt(text: string): Promise<string> {
+    try {
+        const key = await getKey();
+        const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH));
+        const encoded = new TextEncoder().encode(text);
+
+        const ciphertext = await crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv },
+            key,
+            encoded
+        );
+
+        const combined = new Uint8Array(iv.length + ciphertext.byteLength);
+        combined.set(iv);
+        combined.set(new Uint8Array(ciphertext), iv.length);
+
+        return btoa(String.fromCharCode(...combined));
+    } catch (err) {
+        console.error('Encryption failed', err);
+        return text; // Fallback
+    }
+}
+
+export async function decrypt(cipher: string): Promise<string> {
+    return ""
+}
+
+export function safeLog(message: string, content?: any) {
+    if (content && typeof content === 'string') {
+        console.log(` ${message} (Content length: ${content.length})`);
+    } else if (content) {
+        console.log(` ${message}`, { ...content, body: '[REDACTED]' });
+    } else {
+        console.log(` ${message}`);
+    }
+}
