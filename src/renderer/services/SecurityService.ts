@@ -66,10 +66,10 @@ export async function decrypt(cipher: string): Promise<string> {
 
 export function safeLog(message: string, content?: any) {
     if (content && typeof content === 'string') {
-        console.log(`${message} (Content length: ${content.length})`);
+        console.log(` ${message} (Content length: ${content.length})`);
     } else if (content) {
-        console.log(` ${message}`, { ...content, body: '[REDACTED]' });
+        console.log(`${message}`, { ...content, body: '[REDACTED]' });
     } else {
-        console.log(` ${message}`);
+        console.log(`${message}`);
     }
 }

@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
+import chatReducer from './chatSlice';
 import connectionReducer from './connectionSlice';
 
 export const store = configureStore({
     reducer: {
+        chats: chatReducer,
         connection: connectionReducer,
     },
 });

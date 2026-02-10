@@ -1,6 +1,6 @@
 import { AppDispatch } from '../store';
-
 import { setStatus as setConnectionStatus } from '../store/connectionSlice';
+import { addMessage, syncQueue } from '../store/chatSlice';
 import { decrypt } from './SecurityService';
 
 let socket: WebSocket | null = null;
@@ -8,7 +8,26 @@ let reconnectTimeout: NodeJS.Timeout | null = null;
 let heartbeatInterval: NodeJS.Timeout | null = null;
 let retryCount = 0;
 
+export function setupSync(dispatch: AppDispatch) {
+    const electron = (window as any).electron;
+    // Listen for messages from Electron main process (IPC)
+    const removeIpcListener = electron.ipcRenderer.on('new-message', async (msg: any) => {
+        const decryptedMsg = {
+            ...msg,
+            body: await decrypt(msg.body)
+        };
+        dispatch(addMessage(decryptedMsg));
+    });
 
+    connect(dispatch);
+
+    return () => {
+        if (socket) socket.close();
+        if (reconnectTimeout) clearTimeout(reconnectTimeout);
+        if (heartbeatInterval) clearInterval(heartbeatInterval);
+        removeIpcListener();
+    };
+}
 
 function connect(dispatch: AppDispatch) {
     if (socket) socket.close();
@@ -19,6 +38,7 @@ function connect(dispatch: AppDispatch) {
     socket.onopen = () => {
         console.log('SyncService: Connected to server');
         dispatch(setConnectionStatus('Connected'));
+        dispatch(syncQueue());
         retryCount = 0;
         startHeartbeat();
     };
@@ -26,7 +46,9 @@ function connect(dispatch: AppDispatch) {
     socket.onmessage = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
         if (data.type === 'new-message') {
-            console.log("more to come...")
+
+            console.log(` do nothing here bcus  d db transaction business logic already handles this`)
+
         }
     };
 
