@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchMessages, searchMessages, setSearchQuery, sendMessage, clearSearchResults } from '../store/chatSlice';
 import { Box, Typography, TextField, Button, List, ListItem, Paper, InputAdornment, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-
+import { MessageComposer } from './MessageComposer';
 
 export const MessageView = () => {
     const dispatch = useAppDispatch();
@@ -153,6 +153,18 @@ export const MessageView = () => {
                 </List>
             </Box>
 
+            {/* Message Composer Area */}
+            <Box sx={{
+                flexShrink: 0,
+                borderTop: 1,
+                borderColor: 'divider',
+                backgroundColor: 'background.paper'
+            }}>
+                <MessageComposer
+                    chatId={selectedChatId}
+                    onSendMessage={handleSendMessage}
+                />
+            </Box>
         </Box>
     );
 };
