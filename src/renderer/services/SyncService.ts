@@ -1,6 +1,6 @@
 import { AppDispatch } from '../store';
 import { setStatus as setConnectionStatus } from '../store/connectionSlice';
-import { addMessage, syncQueue } from '../store/chatSlice';
+import { syncQueue } from '../store/chatSlice';
 import { decrypt } from './SecurityService';
 
 let socket: WebSocket | null = null;
@@ -16,7 +16,7 @@ export function setupSync(dispatch: AppDispatch) {
             ...msg,
             body: await decrypt(msg.body)
         };
-        dispatch(addMessage(decryptedMsg));
+
     });
 
     connect(dispatch);

@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { store } from './store';
-
+import { ChatList } from './components/ChatList';
 import { ConnectionIndicator } from './components/ConnectionIndicator';
 import { Box, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-
-
+import { useAppDispatch } from './store/hooks';
+import { setupSync } from './services/SyncService';
 
 const theme = createTheme({
     palette: {
@@ -59,16 +59,21 @@ const theme = createTheme({
 });
 
 const MainLayout = () => {
+    const dispatch = useAppDispatch();
 
+    useEffect(() => {
+        const cleanup = setupSync(dispatch);
+        return cleanup;
+    }, [dispatch]);
 
     return (
         <Box sx={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden' }}>
             <Box sx={{ width: 350, borderRight: 1, borderColor: 'divider', display: 'flex', flexDirection: 'column' }}>
                 <ConnectionIndicator />
-                place holder
+                <ChatList />
             </Box>
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', minWidth: 0 }}>
-                place holder
+                Place holder
             </Box>
         </Box>
     );
