@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import { ChatList } from './components/ChatList';
+import { MessageView } from './components/MessageView';
 import { ConnectionIndicator } from './components/ConnectionIndicator';
 import { Box, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { useAppDispatch } from './store/hooks';
@@ -73,7 +74,7 @@ const MainLayout = () => {
                 <ChatList />
             </Box>
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', minWidth: 0 }}>
-                Place holder
+                <MessageView />
             </Box>
         </Box>
     );
