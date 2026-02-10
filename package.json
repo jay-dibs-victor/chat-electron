@@ -2,7 +2,13 @@
     "name": "secure-messenger-desktop",
     "version": "1.0.0",
     "main": "out/main/main.js",
-    "scripts": {},
+    "scripts": {
+        "dev": "node scripts/start-electron.js",
+        "build": "electron-vite build",
+        "preview": "electron-vite preview",
+        "test": "vitest",
+        "postinstall": "electron-builder install-app-deps"
+    },
     "dependencies": {
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
