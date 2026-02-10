@@ -58,7 +58,7 @@ export function setupDbHandlers() {
 
     // IPC Handlers
     ipcMain.handle('get-chats', (_: any, { limit, offset }: { limit: number; offset: number }) => {
-        console.log(`IPC: get-chats limit=${limit}, offset=${offset}`);
+        // console.log(`IPC: get-chats limit=${limit}, offset=${offset}`);
         return new Promise((resolve, reject) => {
             if (!db) return resolve([]);
             db.all('SELECT * FROM chats ORDER BY lastMessageAt DESC LIMIT ? OFFSET ?', [limit, offset], (err: any, rows: any) => {
@@ -86,7 +86,7 @@ export function setupDbHandlers() {
     ipcMain.handle('search-messages', (_: any, { chatId, query, limit }: { chatId: string; query: string; limit: number }) => {
         return new Promise((resolve, reject) => {
             if (!db) return resolve([]);
-            // Note: Using MATCH ? with f.body for FTS5
+            // Note: Using MATCH ? with f.body for FTS5 search
             db.all(`
                 SELECT m.* FROM messages m
                 JOIN messages_fts f ON m.id = f.id
@@ -165,6 +165,7 @@ export function setupDbHandlers() {
     });
 }
 
+// added this feature for user send message to current chat
 export function saveMessage(chatId: string, message: any) {
     if (!db) return;
     db.serialize(() => {
