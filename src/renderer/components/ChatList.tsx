@@ -68,7 +68,7 @@ export const ChatList = () => {
     return (
         <Box sx={{ flex: 1, overflow: 'hidden' }}>
             <List
-                height={800}
+                height={800} // This should ideally be dynamic
                 itemCount={chats.length}
                 itemSize={72}
                 width="100%"

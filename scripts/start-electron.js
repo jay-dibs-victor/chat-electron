@@ -15,7 +15,7 @@ try {
  * Robustly synchronizes and enhances the process PATH variable across different OS.
  * This ensures that installed toolchains (Python, Go, Dotnet, PHP) are always accessible.
  */
-function syncEnvironmentToolChain() {
+function syncEnvironment() {
     const platform = os.platform();
     let paths = [];
 
@@ -83,7 +83,7 @@ function syncEnvironmentToolChain() {
     process.env.PATH = uniquePaths.join(sep);
 }
 
-syncEnvironmentToolChain();
+syncEnvironment();
 console.log('[Start] Environment PATH synchronized and tool-aware across platforms.');
 if (process.env.ELECTRON_RUN_AS_NODE) {
     delete process.env.ELECTRON_RUN_AS_NODE;

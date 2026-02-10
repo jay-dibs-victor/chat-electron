@@ -38,7 +38,8 @@ const initialState: ChatState = {
     outboundQueue: [],
 };
 
-
+// Electron IPC helpers
+// Electron IPC helpers
 const getElectron = () => (window as any).electron;
 
 export const fetchChats = createAsyncThunk(

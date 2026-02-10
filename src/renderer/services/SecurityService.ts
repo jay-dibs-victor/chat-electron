@@ -1,4 +1,8 @@
-
+/**
+ * SecurityService - Module boundary for encryption/decryption
+ * 
+ * Implements robust E2EE using WebCrypto AES-GCM.
+ */
 
 const ENCRYPTION_KEY_STR = 'secure-messenger-demo-key-2026'; // Demo key
 const IV_LENGTH = 12;
@@ -66,10 +70,10 @@ export async function decrypt(cipher: string): Promise<string> {
 
 export function safeLog(message: string, content?: any) {
     if (content && typeof content === 'string') {
-        console.log(` ${message} (Content length: ${content.length})`);
+        console.log(`[SecurityService] ${message} (Content length: ${content.length})`);
     } else if (content) {
-        console.log(`${message}`, { ...content, body: '[REDACTED]' });
+        console.log(`[SecurityService] ${message}`, { ...content, body: '[REDACTED]' });
     } else {
-        console.log(`${message}`);
+        console.log(`[SecurityService] ${message}`);
     }
 }

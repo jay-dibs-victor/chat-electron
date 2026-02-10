@@ -1,6 +1,6 @@
 import { AppDispatch } from '../store';
-import { setStatus as setConnectionStatus } from '../store/connectionSlice';
 import { addMessage, syncQueue } from '../store/chatSlice';
+import { setStatus as setConnectionStatus } from '../store/connectionSlice';
 import { decrypt } from './SecurityService';
 
 let socket: WebSocket | null = null;
@@ -10,6 +10,8 @@ let retryCount = 0;
 
 export function setupSync(dispatch: AppDispatch) {
     const electron = (window as any).electron;
+
+
     // Listen for messages from Electron main process (IPC)
     const removeIpcListener = electron.ipcRenderer.on('new-message', async (msg: any) => {
         const decryptedMsg = {
@@ -46,9 +48,10 @@ function connect(dispatch: AppDispatch) {
     socket.onmessage = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
         if (data.type === 'new-message') {
-
-            console.log(` do nothing here bcus  d db transaction business logic already handles this`)
-
+            // Handled via IPC usually, but also via WS if connected directly
+            // In this app, the main process saves to DB and then sends via IPC
+            // But we can also handle it here if the WS server is external.
+            // For this simulator, the server is local and main process handles broadcast.
         }
     };
 
