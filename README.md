@@ -1,6 +1,6 @@
 # Secure Messenger Desktop (Chat List + Sync Simulator)
 
-A high-performance Electron desktop application built with React, TypeScript, and SQLite.
+Electron Test: A high-performance Electron desktop application built with React, TypeScript, and SQLite.
 
 ## Architecture Overview
 
